@@ -1,0 +1,25 @@
+2025-05-02 10:56:07,611 - MainThread - INFO - Logging to file: downloader.log
+2025-05-02 10:56:07,611 - MainThread - INFO - ffmpeg found.
+2025-05-02 10:56:07,611 - MainThread - INFO - Output directory set to: ./livestream_downloads
+2025-05-02 10:56:07,611 - MainThread - INFO - Scheduled start time set for today at 10:57.
+2025-05-02 10:56:07,611 - MainThread - INFO - Waiting for 52.39 seconds (until 2025-05-02 10:57:00)... Press Ctrl+C to cancel wait and exit.
+2025-05-02 10:57:00,005 - MainThread - INFO - Scheduled time reached.
+2025-05-02 10:57:00,007 - MainThread - INFO - Starting download threads...
+2025-05-02 10:57:00,009 - Thread-Lofi girl  - INFO - [Thread-Lofi girl ] Starting download attempt 1/5 for 'Lofi girl stream'
+2025-05-02 11:21:13,502 - MainThread - INFO - Logging to file: downloader.log
+2025-05-02 11:21:13,502 - MainThread - INFO - ffmpeg found.
+2025-05-02 11:21:13,502 - MainThread - INFO - Output directory set to: ./livestream_downloads
+2025-05-02 11:21:13,502 - MainThread - INFO - Scheduled start time set for today at 11:22.
+2025-05-02 11:21:13,502 - MainThread - INFO - Waiting for 46.50 seconds (until 2025-05-02 11:22:00)... Press Ctrl+C to cancel wait and exit.
+2025-05-02 11:22:00,003 - MainThread - INFO - Scheduled time reached.
+2025-05-02 11:22:00,005 - MainThread - INFO - Starting download threads...
+2025-05-02 11:22:00,007 - Thread-Lofi girl  - INFO - [Thread-Lofi girl ] Starting download attempt 1/5 for 'Lofi girl stream'
+2025-05-02 11:25:33,987 - MainThread - INFO - Logging to file: downloader.log
+2025-05-02 11:25:33,987 - MainThread - INFO - ffmpeg found.
+2025-05-02 11:25:33,987 - MainThread - INFO - Output directory set to: ./livestream_downloads
+2025-05-02 11:25:33,988 - MainThread - INFO - Removed leftover .part file: Lofi girl stream_livestream_2025-05-02_11-22-00-006524_9fe05216_jfKfPfyJRdk.mp4.part
+2025-05-02 11:25:33,988 - MainThread - INFO - Scheduled start time set for today at 11:26.
+2025-05-02 11:25:33,988 - MainThread - INFO - Waiting for 26.01 seconds (until 2025-05-02 11:26:00)... Press Ctrl+C to cancel wait and exit.
+2025-05-02 11:26:00,005 - MainThread - INFO - Scheduled time reached.
+2025-05-02 11:26:00,007 - MainThread - INFO - Starting download threads...
+2025-05-02 11:26:00,008 - Thread-Lofi girl  - INFO - [Thread-Lofi girl ] Starting download attempt 1/5 for 'Lofi girl stream'
