@@ -24,8 +24,8 @@ def load_configuration(config_path):
         # Basic validation
         if 'streams' not in config or not isinstance(config['streams'], list):
             raise ValueError("Config missing 'streams' list.")
-        if 'output_directory' not in config:
-             raise ValueError("Config missing 'output_directory'.")
+        if 'output_dir' not in config:
+             raise ValueError("Config missing 'output_dir'.")
         return config
     except FileNotFoundError:
         logging.error(f"Configuration file '{config_path}' not found.")
@@ -54,78 +54,50 @@ def cleanup_part_files(directory):
 # Signal threads to stop
 shutdown_event = threading.Event()
 
-# Downloads a single segment for a given stream with retries
-def download_segment(stream_url, stream_name, quality, output_dir, segment_duration_sec, retries, delay_base):
+# Downloads a single segment for a given stream 
+def download_segment(stream_url, stream_name, quality, output_dir, segment_duration_sec):
     thread_name = threading.current_thread().name
-    retry_count = 0
+    now = datetime.datetime.now()
+    unique_id = uuid.uuid4().hex[:8]
+    timestamp = now.strftime('%Y-%m-%d_%H-%M-%S-%f')
+    ydl_opts = {
+        'format': quality,
+        'outtmpl': os.path.join(
+            output_dir, 
+            f"{stream_name}_livestream_{timestamp}_{unique_id}_%(id)s.%(ext)s"
+        ),
+        'noplaylist': True,
+        'external_downloader': 'ffmpeg',
+        'external_downloader_args': ['-y', '-t', str(segment_duration_sec)],
+        'quiet': True,
+        'noprogress': True,
+        'verbose': False,
+        'recode_video': 'mp4'
+    }
 
-    while not shutdown_event.is_set() and retry_count < retries:
-        # Make filename extremely unique with timestamp and uuid
-        now = datetime.datetime.now()
-        unique_id = uuid.uuid4().hex[:8]  # Unique string for every segment
-        timestamp = now.strftime('%Y-%m-%d_%H-%M-%S-%f')
-        ydl_opts = {
-            'format': quality,
-            'outtmpl': os.path.join(
-                output_dir, 
-                f"{stream_name}_livestream_{timestamp}_{unique_id}_%(id)s.%(ext)s"
-            ),
-            'noplaylist': True,
-            'download_sections': [f"*0-{segment_duration_sec}"],
-            'quiet': True,
-            'noprogress': True,
-            'verbose': False,
-            'recode_video': 'mp4'
-        }
-
-        try:
-            logging.info(f"[{thread_name}] Starting download attempt {retry_count + 1}/{retries} for '{stream_name}'")
-            if shutdown_event.is_set():
-                logging.info(f"[{thread_name}] Shutdown signalled before starting download for {stream_name}.")
-                break
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([stream_url])
-            if shutdown_event.is_set():
-                logging.info(f"[{thread_name}] Shutdown signalled after download for {stream_name}.")
-                break
-            logging.info(f"[{thread_name}] Successfully downloaded segment for {stream_name}")
-            retry_count = 0
-        except yt_dlp.utils.DownloadError as e:
-            logging.error(f"[{thread_name}] Download error for {stream_name}: {e}")
-            retry_count += 1
-            if retry_count < retries and not shutdown_event.is_set():
-                delay = delay_base * (2 ** (retry_count - 1))
-                logging.warning(f"[{thread_name}] Retrying {stream_name} in {delay} seconds... (Attempt {retry_count}/{retries})")
-                shutdown_event.wait(timeout=delay)
-                if shutdown_event.is_set():
-                    logging.info(f"[{thread_name}] Shutdown signalled during retry wait for {stream_name}.")
-            elif not shutdown_event.is_set():
-                logging.error(f"[{thread_name}] Max retries ({retries}) reached for {stream_name}. Stopping attempts for this stream.")
-        except Exception as e:
-            logging.exception(f"[{thread_name}] An unexpected error occurred for {stream_name}: {e}")
-            retry_count += 1
-            if retry_count < retries and not shutdown_event.is_set():
-                delay = delay_base * (2 ** (retry_count - 1))
-                logging.warning(f"[{thread_name}] Retrying {stream_name} after unexpected error in {delay} seconds...")
-                shutdown_event.wait(timeout=delay)
-                if shutdown_event.is_set():
-                    logging.info(f"[{thread_name}] Shutdown signalled during retry wait for {stream_name}.")
-            elif not shutdown_event.is_set():
-                logging.error(f"[{thread_name}] Max retries ({retries}) reached for {stream_name} after unexpected error. Stopping.")
+    try:
+        logging.info(f"[{thread_name}] Starting download for '{stream_name}'")
+        if shutdown_event.is_set():
+            logging.info(f"[{thread_name}] Shutdown signalled before starting download for {stream_name}.")
+            return
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([stream_url])
+        if shutdown_event.is_set():
+            logging.info(f"[{thread_name}] Shutdown signalled after download for {stream_name}.")
+            return
+        logging.info(f"[{thread_name}] Successfully downloaded segment for {stream_name}")
+    except Exception as e:
+        logging.error(f"[{thread_name}] Download failed for {stream_name}: {e}")
 
     if shutdown_event.is_set():
         logging.info(f"[{thread_name}] Download thread for {stream_name} stopping due to shutdown signal.")
     else:
-        logging.info(f"[{thread_name}] Download thread for {stream_name} finished (max retries reached or other error).")
-
+        logging.info(f"[{thread_name}] Download thread for {stream_name} finished.")
 
 def start_downloads(config):
-    """Initializes and manages the download threads."""
-    threads = []
-    output_directory = config['output_directory']
-    segment_duration = config.get('segment_duration', 50) # Default 1 hour 3600
-    max_retries = config.get('max_retries', 5)             # Default 5 retries
-    retry_delay_base = config.get('retry_delay_base', 5)   # Default 5s base delay
+    output_dir = config['output_dir']
+    segment_duration = config.get('segment_duration', 50) # TODO: Default 1 hour 3600
+
     streams = config.get('streams', [])
 
     logging.info("Starting download threads...")
@@ -146,10 +118,8 @@ def start_downloads(config):
                 stream['url'],
                 stream['stream_name'],
                 stream['quality'],
-                output_directory,
+                output_dir,
                 segment_duration,
-                max_retries,
-                retry_delay_base
             ),
             # Give threads names for logging
             name=f"Thread-{stream['stream_name'][:10]}" # Truncate long names
@@ -196,16 +166,16 @@ if __name__ == "__main__":
         logging.info("ffmpeg found.")
 
     # Checks if output directory exists
-    output_directory = config['output_directory']
+    output_dir = config['output_dir']
     try:
-        os.makedirs(output_directory, exist_ok=True) # Prevents error if dir exists
-        logging.info(f"Output directory set to: {output_directory}")
+        os.makedirs(output_dir, exist_ok=True) # Prevents error if dir exists
+        logging.info(f"Output directory set to: {output_dir}")
     except OSError as e:
-        logging.error(f"Could not create output directory '{output_directory}': {e}")
+        logging.error(f"Could not create output directory '{output_dir}': {e}")
         sys.exit(1)
 
     # Optional: clean up leftover .part files at startup
-    cleanup_part_files(output_directory)
+    cleanup_part_files(output_dir)
 
     # Scheduling Logic
     schedule_enabled = config.get('schedule_enabled', False)
