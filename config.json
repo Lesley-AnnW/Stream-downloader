@@ -5,13 +5,11 @@
 "retry_delay_base": 10,
 "log_file": "downloader.log",
 "schedule_enabled": true,
-"start_hour": 12,
-"start_minute": 13,
 "streams": [
-{
-"url": "https://www.youtube.com/watch?v=jfKfPfyJRdk&ab_channel=LofiGirl",
-"stream_name": "Lofi girl stream",
-"quality": "96"
-}
-]
+    {
+            "url": "https://www.youtube.com/watch?v=jfKfPfyJRdk&ab_channel=LofiGirl",
+            "stream_name": "Lofi girl stream",
+            "quality": "96"
+        }
+    ]
 }
