@@ -1,8 +1,6 @@
 {
 "output_dir": "./livestream_downloads",
 "segment_duration": 60,
-"max_retries": 5,
-"retry_delay_base": 10,
 "log_file": "downloader.log",
 "schedule_enabled": true,
 "streams": [
