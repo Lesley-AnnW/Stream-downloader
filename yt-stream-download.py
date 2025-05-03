@@ -10,6 +10,7 @@ import time
 
 from constants import CONFIG_FILE, DEFAULT_SEGMENT_DURATION, DEFAULT_OUTPUT_DIR, DEFAULT_LOG_FILE
 
+# TODO: ask user how long they would like to download, instead of hardcoding
 shutdown_event = threading.Event()
 
 def setup_logging(log_file=None):
@@ -234,7 +235,7 @@ def handle_scheduling(schedule_enabled, get_start_time_func, stop_event):
     '''
     Handles user scheduling: prompts for time if enabled, waits if necessary.
     Returns True if it's time to execute downloads now, False if scheduling
-    was cancelled or resulted in no execution needed now.
+    was cancelled or no execution needed now.
     '''
     if not schedule_enabled:
         logging.info("Scheduling is disabled. Starting downloads immediately.")
