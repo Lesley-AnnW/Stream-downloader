@@ -1,6 +1,16 @@
 # Stream Downloader
 
-This repository provides a tool for recording and downloading YouTube livestreams. The tool includes a script to download livestreams in timed segments and supports multiple simultaneous stream downloads.
+This repository provides a tool for recording and downloading YouTube livestreams.
+
+## Features 
+
+* Download YouTube livestreams.
+* Save streams in timed segments.
+* Support for multiple simultaneous downloads.
+* Configurable output quality and segment duration.
+* Scheduled start times for recordings in the next 24 hours.
+* Graceful handling of interruptions.
+* Logging to console and file.
 
 ## Overview
 
@@ -91,3 +101,7 @@ The code performs the following steps:
 7.  **Downloading**
 
     Wait for your download to finish or use `Ctrl+C` in the terminal to stop the downloader prematurely. When shut down prematurely, the script will attempt a graceful shutdown and save any in-progress segments.
+
+## Disclaimer 
+
+The copyright of the downloaded livestreams belongs to the original content creators and their respective channels. This tool does not grant any rights to the downloaded content. Users are responsible for ensuring their use of this tool complies with all applicable copyright laws and the terms of service of Youtube.
