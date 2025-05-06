@@ -36,7 +36,7 @@ yt-dlp
 
    ```bash
       pip install yt-dlp
-      ``` 
+   ``` 
 
 System dependency:
 ffmpeg (must be installed and on your system PATH)
@@ -62,7 +62,7 @@ Logs written to console and log file
    You can do this using yt-dlp directly in your terminal:
    ```bash
       yt-dlp -F your-livestream-url-here
-      ```
+   ```
    This will output a table of available formats. 
    Choose the format code or selector string you want, and use it in the "quality" field in the config.
 2.  **Add your stream to the list in the json file**
@@ -76,7 +76,7 @@ Logs written to console and log file
 6. **Run the downloader**
    ```bash
       python yt-stream-downloader.py
-      ```
+   ```
   You will be prompted:
   'Enter start time for recording (HH:MM, 24-hour format) or type 'start now' to begin immediately:'
   Enter your desired start time (e.g., 20:00 to start at 8 PM), or type start now to begin immediately.
