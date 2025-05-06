@@ -82,9 +82,9 @@ The code performs the following steps:
 
 3.  **Set your desired duration in seconds.**
     Examples:
-    * For 1-hour chunks, set `"segment_duration": 3600`
-    * For 10-minute chunks, set `"segment_duration": 600`
-    * For 30-second chunks, set `"segment_duration": 30`
+    * For 1-hour chunks, set `"DEFAULT_SEGMENT_DURATION": 3600`
+    * For 10-minute chunks, set `"DEFAULT_SEGMENT_DURATION": 600`
+    * For 30-second chunks, set `"DEFAULT_SEGMENT_DURATION": 30`
 
 4.  Optional: **Repeat steps 1-3 for additional streams.**
 

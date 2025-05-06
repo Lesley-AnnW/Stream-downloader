@@ -1,6 +1,5 @@
 {
 "output_dir": "./livestream_downloads",
-"segment_duration": 60,
 "log_file": "downloader.log",
 "schedule_enabled": true,
 "streams": [
