@@ -61,6 +61,7 @@ The code performs the following steps:
 ## How to Use
 
 1.  **Check available download quality**
+
     Before adding a stream, you'll want to see what quality options are available for your chosen livestream URL. You can do this using `yt-dlp` directly in your terminal:
     ```bash
     yt-dlp -F your-livestream-url-here
@@ -88,4 +89,5 @@ The code performs the following steps:
     Enter your desired start time (e.g., `20:00` to start at 8 PM), or type `start now` to begin immediately. To schedule recordings for tomorrow, just enter a time that has already passed today; the script will wait until that time tomorrow.
 
 7.  **Downloading**
+
     Wait for your download to finish or use `Ctrl+C` in the terminal to stop the downloader prematurely. When shut down prematurely, the script will attempt a graceful shutdown and save any in-progress segments.
